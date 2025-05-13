@@ -17,7 +17,6 @@ const Index = () => {
             <a href="#features" className="text-gray-600 hover:text-primary transition">Features</a>
             <a href="#how-it-works" className="text-gray-600 hover:text-primary transition">How It Works</a>
             <a href="#sustainability" className="text-gray-600 hover:text-primary transition">Sustainability</a>
-            <a href="#tech" className="text-gray-600 hover:text-primary transition">Technology</a>
             <a href="#about" className="text-gray-600 hover:text-primary transition">About</a>
             <a href="#contact" className="text-gray-600 hover:text-primary transition">Contact</a>
           </div>
@@ -52,7 +51,7 @@ const Index = () => {
           </div>
           <div className="w-full md:w-1/2 py-6 text-center">
             <img 
-              src="/placeholder.svg" 
+              src="/images/wardrobe-app.jpg" 
               alt="OutfitGenie App" 
               className="w-full max-w-md mx-auto rounded-lg shadow-2xl"
             />
@@ -185,7 +184,7 @@ const Index = () => {
           <div className="flex flex-wrap items-center">
             <div className="w-full md:w-1/2 p-6">
               <img 
-                src="/placeholder.svg" 
+                src="/images/sustainable-fashion.jpg" 
                 alt="Sustainable Fashion" 
                 className="rounded-lg shadow-xl"
               />
@@ -218,45 +217,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Tech Stack */}
-      <section id="tech" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-6">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4">Technology Stack</h2>
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-              OutfitGenie is built on modern technologies to deliver a seamless user experience.
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center w-40">
-              <h3 className="font-bold text-lg">HTML</h3>
-              <p className="text-gray-600 text-sm">Structure</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md text-center w-40">
-              <h3 className="font-bold text-lg">CSS</h3>
-              <p className="text-gray-600 text-sm">Styling</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md text-center w-40">
-              <h3 className="font-bold text-lg">React</h3>
-              <p className="text-gray-600 text-sm">UI Framework</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md text-center w-40">
-              <h3 className="font-bold text-lg">Tailwind</h3>
-              <p className="text-gray-600 text-sm">CSS Framework</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md text-center w-40">
-              <h3 className="font-bold text-lg">Python</h3>
-              <p className="text-gray-600 text-sm">Backend Logic</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md text-center w-40">
-              <h3 className="font-bold text-lg">TensorFlow</h3>
-              <p className="text-gray-600 text-sm">AI Framework</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Team Section */}
       <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-6">
@@ -271,7 +231,7 @@ const Index = () => {
             <div className="w-full md:w-1/2 p-6 lg:w-1/3">
               <div className="text-center">
                 <img 
-                  src="/placeholder.svg" 
+                  src="/images/ayesha-sultana.png" 
                   alt="Ayesha Sultana" 
                   className="rounded-full w-48 h-48 mx-auto object-cover mb-4"
                 />
@@ -286,7 +246,7 @@ const Index = () => {
             <div className="w-full md:w-1/2 p-6 lg:w-1/3">
               <div className="text-center">
                 <img 
-                  src="/placeholder.svg" 
+                  src="/images/deeksha-sd.jpg" 
                   alt="Deeksha S D" 
                   className="rounded-full w-48 h-48 mx-auto object-cover mb-4"
                 />
@@ -375,7 +335,6 @@ const Index = () => {
                 <li><a href="#features" className="hover:text-primary transition">Features</a></li>
                 <li><a href="#how-it-works" className="hover:text-primary transition">How It Works</a></li>
                 <li><a href="#sustainability" className="hover:text-primary transition">Sustainability</a></li>
-                <li><a href="#tech" className="hover:text-primary transition">Technology</a></li>
                 <li><a href="#about" className="hover:text-primary transition">About Us</a></li>
               </ul>
             </div>
