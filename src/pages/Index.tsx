@@ -342,8 +342,8 @@ const Index = () => {
             <div className="w-full md:w-1/3">
               <h3 className="text-lg font-semibold mb-4">Contact</h3>
               <p className="mb-2">Email: info@outfitgenie.com</p>
-              <p className="mb-2">Phone: (123) 456-7890</p>
-              <p>Address: 123 Fashion Blvd, Style City, ST 12345</p>
+              <p className="mb-2">Phone: 9632123458</p>
+              <p>Address: Reva University, Bangalore</p>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-6 text-center text-sm">
