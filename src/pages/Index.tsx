@@ -51,7 +51,7 @@ const Index = () => {
           </div>
           <div className="w-full md:w-1/2 py-6 text-center">
             <img 
-              src="/images/wardrobe-app.jpg" 
+              src="/images/homepage.jpg" 
               alt="OutfitGenie App" 
               className="w-full max-w-md mx-auto rounded-lg shadow-2xl"
             />
@@ -231,7 +231,7 @@ const Index = () => {
             <div className="w-full md:w-1/2 p-6 lg:w-1/3">
               <div className="text-center">
                 <img 
-                  src="/images/ayesha-sultana.png" 
+                  src="/images/ayesha-sultana.jpeg" 
                   alt="Ayesha Sultana" 
                   className="rounded-full w-48 h-48 mx-auto object-cover mb-4"
                 />
