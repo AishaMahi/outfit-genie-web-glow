@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set up listener for auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -54,6 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
+    console.log('Signing up with:', { email, fullName });
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -65,6 +67,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
+      console.log('Sign up response:', { data, error });
+
       if (error) {
         toast.error(error.message);
         return;
@@ -73,6 +77,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.user) {
         toast.success("Account created! Please check your email for verification.");
         navigate('/wardrobe');
+      } else {
+        toast.error("Something went wrong during sign up. Please try again.");
       }
     } catch (error) {
       console.error('Error signing up:', error);
@@ -81,20 +87,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log('Signing in with:', { email });
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log('Sign in response:', { data, error });
+
       if (error) {
-        toast.error(error.message);
+        toast.error(`Sign in failed: ${error.message}`);
         return;
       }
 
       if (data.user) {
         toast.success('Successfully signed in!');
         navigate('/wardrobe');
+      } else {
+        toast.error("Something went wrong during sign in. Please try again.");
       }
     } catch (error) {
       console.error('Error signing in:', error);
