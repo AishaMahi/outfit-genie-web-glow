@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (data.user) {
         toast.success("Account created! Please check your email for verification.");
-        navigate('/');
+        navigate('/wardrobe');
       }
     } catch (error) {
       console.error('Error signing up:', error);
@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (data.user) {
         toast.success('Successfully signed in!');
-        navigate('/');
+        navigate('/wardrobe');
       }
     } catch (error) {
       console.error('Error signing in:', error);
