@@ -136,13 +136,15 @@ const MyWardrobe = () => {
       
       <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <Input 
-            placeholder="Search items..." 
-            className="max-w-sm"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            icon={<Search className="h-4 w-4" />}
-          />
+          <div className="relative w-full md:max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search items..." 
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <Button variant="outline" size="icon">
             <Filter className="h-4 w-4" />
           </Button>
