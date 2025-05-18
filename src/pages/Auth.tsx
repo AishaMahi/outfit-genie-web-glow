@@ -29,13 +29,9 @@ const Auth = () => {
       return;
     }
     
-    console.log("Attempting to sign in with:", { email });
     try {
       setIsSubmitting(true);
       await signIn(email, password);
-    } catch (error) {
-      console.error("Error during sign in:", error);
-      toast.error(`Sign in failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -54,13 +50,9 @@ const Auth = () => {
       return;
     }
     
-    console.log("Attempting to sign up with:", { email, fullName });
     try {
       setIsSubmitting(true);
       await signUp(email, password, fullName);
-    } catch (error) {
-      console.error("Error during sign up:", error);
-      toast.error(`Sign up failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsSubmitting(false);
     }
