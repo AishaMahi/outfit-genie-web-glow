@@ -1,217 +1,173 @@
 
-import { useState } from "react";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import { toast } from "@/components/ui/sonner";
 
 const Auth = () => {
-  const [isRegistering, setIsRegistering] = useState(false);
-  const { signIn, signUp } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
 
-  // Form states
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // Redirect if already authenticated
+  if (user) {
+    navigate('/');
+    return null;
+  }
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+    setLoading(true);
     
     try {
-      setIsSubmitting(true);
-      console.log('Attempting sign in with:', { email, passwordLength: password.length });
       await signIn(email, password);
+      toast.success("Signed in successfully");
+      navigate('/');
     } catch (error) {
-      console.error('Sign in error:', error);
-      toast.error('Sign in failed. Please check your credentials.');
+      toast.error(error.message || "Failed to sign in");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     
-    if (!email || !password || !fullName || !confirmPassword) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-    
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords don't match");
       return;
     }
+
+    setLoading(true);
     
     try {
-      setIsSubmitting(true);
-      console.log('Attempting sign up with:', { email, fullName, passwordLength: password.length });
-      await signUp(email, password, fullName);
+      await signUp(email, password);
+      toast.success("Account created successfully");
+      navigate('/');
     } catch (error) {
-      console.error('Sign up error:', error);
-      toast.error('Sign up failed. Please try again.');
+      toast.error(error.message || "Failed to create account");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#FDE1D3] to-[#E5DEFF] flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <Link to="/" className="flex items-center text-gray-600 mb-6 hover:text-primary transition">
-          <ArrowLeft className="mr-2 h-5 w-5" />
-          Back to home
-        </Link>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome</h1>
+          <p className="text-gray-600">Sign in to your account or create a new one</p>
+        </div>
 
-        <Card className="w-full">
-          <CardHeader className="text-center">
-            <CardTitle className="text-3xl">OutfitGenie</CardTitle>
-            <CardDescription>Sign in to manage your smart wardrobe</CardDescription>
+        <Card className="w-full shadow-lg">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl text-center">Authentication</CardTitle>
+            <CardDescription className="text-center">
+              Choose your preferred method to continue
+            </CardDescription>
           </CardHeader>
-          <Tabs defaultValue="signin" value={isRegistering ? "signup" : "signin"}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger 
-                value="signin"
-                onClick={() => setIsRegistering(false)}
-              >
-                Sign In
-              </TabsTrigger>
-              <TabsTrigger 
-                value="signup"
-                onClick={() => setIsRegistering(true)}
-              >
-                Sign Up
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="signin">
-              <form onSubmit={handleSignIn}>
-                <CardContent className="space-y-4">
+          <CardContent>
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="signin">Sign In</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="signin">
+                <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="name@example.com" 
+                    <Label htmlFor="signin-email">Email</Label>
+                    <Input
+                      id="signin-email"
+                      type="email"
+                      placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                      <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                        Forgot password?
-                      </Link>
-                    </div>
-                    <Input 
-                      id="password" 
-                      type="password" 
+                    <Label htmlFor="signin-password">Password</Label>
+                    <Input
+                      id="signin-password"
+                      type="password"
+                      placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
-                </CardContent>
-                <CardFooter>
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={isSubmitting}
+                    disabled={loading}
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
-                      </>
-                    ) : (
-                      'Sign In'
-                    )}
+                    {loading ? "Signing In..." : "Sign In"}
                   </Button>
-                </CardFooter>
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup">
-              <form onSubmit={handleSignUp}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
-                    <Input 
-                      id="signup-name" 
-                      placeholder="John Doe" 
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required 
-                    />
-                  </div>
+                </form>
+              </TabsContent>
+              
+              <TabsContent value="signup">
+                <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="signup-email">Email</Label>
-                    <Input 
-                      id="signup-email" 
-                      type="email" 
-                      placeholder="name@example.com" 
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
-                    <Input 
-                      id="signup-password" 
-                      type="password" 
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      placeholder="Create a password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-confirm">Confirm Password</Label>
-                    <Input 
-                      id="signup-confirm" 
-                      type="password" 
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <Input
+                      id="confirm-password"
+                      type="password"
+                      placeholder="Confirm your password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
-                </CardContent>
-                <CardFooter>
                   <Button 
                     type="submit" 
-                    className="w-full"
-                    disabled={isSubmitting}
+                    className="w-full" 
+                    disabled={loading}
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating Account...
-                      </>
-                    ) : (
-                      'Create Account'
-                    )}
+                    {loading ? "Creating Account..." : "Create Account"}
                   </Button>
-                </CardFooter>
-              </form>
-            </TabsContent>
-          </Tabs>
-          <div className="px-6 pb-6 text-center text-sm text-gray-600">
-            By continuing, you agree to OutfitGenie's <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>.
-          </div>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
         </Card>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-500">
+            By continuing, you agree to our Terms of Service and Privacy Policy
+          </p>
+        </div>
       </div>
     </div>
   );

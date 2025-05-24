@@ -1,138 +1,125 @@
 
-import { useState, useEffect, createContext, useContext } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useNavigate } from 'react-router-dom';
-import { toast } from '@/components/ui/sonner';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-const AuthContext = createContext(undefined);
+const AuthContext = createContext({});
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for active session on mount
-    const getSession = async () => {
-      setLoading(true);
-      console.log('Checking for existing session...');
-      const { data, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error('Error fetching session:', error.message);
-      } else {
-        console.log('Session data:', data);
-      }
-      
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    };
-
-    getSession();
-
-    // Set up listener for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session);
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+    console.log('Checking for existing session...');
+    // Check for existing session
+    checkSession();
   }, []);
 
-  const signUp = async (email, password, fullName) => {
+  const checkSession = async () => {
     try {
-      console.log('Attempting to sign up user:', email);
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) {
-        console.error('Sign up error:', error);
-        toast.error(error.message);
-        return;
-      }
-
-      console.log('Sign up successful:', data);
-      if (data.user) {
-        toast.success("Account created! Please check your email for verification.");
-        navigate('/');
+      // Simulate checking for existing session
+      const savedSession = localStorage.getItem('userSession');
+      const sessionData = savedSession ? JSON.parse(savedSession) : null;
+      
+      console.log('Session data:', { session: sessionData });
+      
+      if (sessionData && sessionData.user) {
+        setUser(sessionData.user);
+        console.log('Auth state changed: EXISTING_SESSION', sessionData.user);
+      } else {
+        console.log('Auth state changed: INITIAL_SESSION', null);
       }
     } catch (error) {
-      console.error('Error signing up:', error);
-      toast.error('An error occurred during sign up. Please try again.');
+      console.error('Error checking session:', error);
+      console.log('Auth state changed: SESSION_ERROR', null);
+    } finally {
+      setLoading(false);
     }
   };
 
   const signIn = async (email, password) => {
     try {
-      console.log('Attempting to sign in user:', email);
-      const { data, error } = await supabase.auth.signInWithPassword({
+      setLoading(true);
+      // Simulate sign in
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const userData = { 
+        id: Math.random().toString(36).substr(2, 9),
         email,
-        password,
-      });
-
-      if (error) {
-        console.error('Sign in error:', error);
-        toast.error(error.message);
-        return;
-      }
-
-      console.log('Sign in successful:', data);
-      if (data.user) {
-        toast.success('Successfully signed in!');
-        navigate('/');
-      }
+        created_at: new Date().toISOString()
+      };
+      
+      // Save session
+      localStorage.setItem('userSession', JSON.stringify({ user: userData }));
+      setUser(userData);
+      console.log('Auth state changed: SIGNED_IN', userData);
+      
+      return userData;
     } catch (error) {
-      console.error('Error signing in:', error);
-      toast.error('An error occurred during sign in. Please try again.');
+      console.error('Sign in error:', error);
+      console.log('Auth state changed: SIGN_IN_ERROR', null);
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signOut = async () => {
+  const signUp = async (email, password) => {
     try {
-      console.log('Attempting to sign out user');
-      const { error } = await supabase.auth.signOut();
+      setLoading(true);
+      // Simulate sign up
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (error) {
-        console.error('Sign out error:', error);
-        toast.error(error.message);
-        return;
-      }
+      const userData = { 
+        id: Math.random().toString(36).substr(2, 9),
+        email,
+        created_at: new Date().toISOString()
+      };
       
-      console.log('Sign out successful');
-      toast.success('Successfully signed out');
-      navigate('/auth');
+      // Save session
+      localStorage.setItem('userSession', JSON.stringify({ user: userData }));
+      setUser(userData);
+      console.log('Auth state changed: SIGNED_UP', userData);
+      
+      return userData;
     } catch (error) {
-      console.error('Error signing out:', error);
-      toast.error('An error occurred during sign out. Please try again.');
+      console.error('Sign up error:', error);
+      console.log('Auth state changed: SIGN_UP_ERROR', null);
+      throw error;
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const logout = async () => {
+    try {
+      // Clear session
+      localStorage.removeItem('userSession');
+      setUser(null);
+      console.log('Auth state changed: SIGNED_OUT', null);
+    } catch (error) {
+      console.error('Logout error:', error);
+      throw error;
+    }
+  };
+
+  const value = {
+    user,
+    loading,
+    signIn,
+    signUp,
+    logout,
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };
