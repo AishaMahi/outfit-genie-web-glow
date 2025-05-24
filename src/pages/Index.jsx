@@ -6,45 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { toast } from "@/components/ui/sonner";
 
 const Index = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("dashboard");
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      toast.success("Logged out successfully");
-      navigate('/auth');
-    } catch (error) {
-      toast.error("Error logging out");
-    }
-  };
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-gray-900">Welcome</CardTitle>
-            <CardDescription>Please sign in to continue</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={() => navigate('/auth')} 
-              className="w-full"
-            >
-              Go to Sign In
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,11 +18,8 @@ const Index = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-              <Badge variant="secondary">Welcome back, {user.email}</Badge>
+              <Badge variant="secondary">Welcome!</Badge>
             </div>
-            <Button variant="outline" onClick={handleLogout}>
-              Sign Out
-            </Button>
           </div>
         </div>
       </header>
@@ -247,7 +208,7 @@ const Index = () => {
                     <div className="space-y-3">
                       <div>
                         <label className="block text-sm font-medium mb-1">Email</label>
-                        <Input value={user.email} disabled />
+                        <Input placeholder="Enter your email" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Display Name</label>
