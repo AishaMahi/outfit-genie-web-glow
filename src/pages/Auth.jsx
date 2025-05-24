@@ -21,7 +21,7 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -31,13 +31,17 @@ const Auth = () => {
     
     try {
       setIsSubmitting(true);
+      console.log('Attempting sign in with:', { email, passwordLength: password.length });
       await signIn(email, password);
+    } catch (error) {
+      console.error('Sign in error:', error);
+      toast.error('Sign in failed. Please check your credentials.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     
     if (!email || !password || !fullName || !confirmPassword) {
@@ -52,7 +56,11 @@ const Auth = () => {
     
     try {
       setIsSubmitting(true);
+      console.log('Attempting sign up with:', { email, fullName, passwordLength: password.length });
       await signUp(email, password, fullName);
+    } catch (error) {
+      console.error('Sign up error:', error);
+      toast.error('Sign up failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
